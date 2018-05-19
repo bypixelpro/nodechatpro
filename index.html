@@ -1,0 +1,60 @@
+<!doctype html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+
+<div class="container">
+    <br>
+    <div class="row">
+    <div class="jumbotron col-6">
+        <h1 class="display-4">Node Chat Pro</h1>
+        <br>
+        <input id="name" class="form-control" placeholder="Nombre">
+        <br>
+        <textarea id="msg" class="form-control" placeholder="Mensaje"></textarea>
+        <br>
+        <button id="send" class="btn btn-primary">Enviar</button>
+    </div>
+    <div id="messages" class="col-6">
+            <h1 class="display-4">Mensajes</h1>
+            
+
+    </div>
+    </div>
+    </div><!--conbtenedor-->
+</div>
+<script>
+    var io = io()
+    $(() => {
+        $('#send').click(()=>{
+            var msg = {name: $("#name").val(), message: $("#msg").val()}
+            console.log('Jquery', msg)
+            postMessage(msg)
+         })
+        getMessage()
+        
+        
+    })
+
+    io.on('message', addMessage)
+
+
+    function addMessage(message){
+        $("#messages").append(`<h4> ${message.name} </h4> <p> ${message.message} </p>`)
+    }
+    function getMessage(){
+        $.get('http://localhost:3000/msg', (data)=>{
+        console.log('Data', data)
+            data.forEach(addMessage);
+        })
+
+    }
+    function postMessage(msg){
+        $.post('http://localhost:3000/msg', msg)
+    }
+
+    
+</script>
