@@ -14,9 +14,9 @@ app.get('/msg', (request, respond) =>{
     respond.send(msg)
 })
 app.post('/msg', (request, respond) =>{
-    console.log('Request', request.body)
+    console.log('Request Body:', request.body)
     msg.push(request.body)
-    io.emit('message', request.body)
+    io.emit('IO Emit:', request.body)
     
     respond.sendStatus(200)
 })
